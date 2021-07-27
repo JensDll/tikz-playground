@@ -1,7 +1,13 @@
-\documentclass{article}
+\documentclass[
+  ngerman,
+  a4paper,
+  12pt
+]{article}
 
 \usepackage{tikz}
 \usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[english, german]{babel}
 
 \usetikzlibrary{
   positioning,
@@ -40,21 +46,23 @@
 \begin{tikzpicture}
   \path
     (0,0) node [] (x1) {$x_1$}
-    (1,0) node [] (x2) {$x_2$}
-    (2,0) node [] {\ldots}
-    (3,0) node [] (xn) {$x_n$}
+    (1.2,0) node [] (x2) {$x_2$}
+    (2.2,0) node [] {\ldots}
+    (3.2,0) node [] (xn) {$x_n$}
+
     (0,1.2) node [w] (w1) {$w_1$}
       edge [<-] (x1)
-    (1,1.2) node [w] (w2) {$w_2$}
+    (1.2,1.2) node [w] (w2) {$w_2$}
       edge [<-] (x2)
-    (2,1.2) node [] {\ldots}
-    (3,1.2) node [w] (wn) {$w_n$}
+    (2.2,1.2) node [] {\ldots}
+    (3.2,1.2) node [w] (wn) {$w_n$}
       edge [<-] (xn)
-    (1.5,3) pic [] (nnn) {nnn}
+
+    (1.6,3) pic [] (nnn) {nnn}
       (nnn-n.250) edge [<-] (w1)
       (nnn-n.270) edge [<-] (w2)
       (nnn-n.290) edge [<-] (wn)
-    (1.5,4.5) node [] {$y$}
+    (1.6,4.5) node [] {$y$}
       edge [<-] (nnn-n.north);
 \end{tikzpicture}
 \end{center}
