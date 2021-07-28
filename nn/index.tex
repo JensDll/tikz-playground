@@ -8,6 +8,7 @@
 \usepackage{xcolor}
 \usepackage[utf8]{inputenc}
 \usepackage[english, german]{babel}
+\usepackage{amsmath}
 
 \usetikzlibrary{
   positioning,
@@ -40,6 +41,7 @@
 \tikzexternalize[prefix=figures/]
 
 \begin{document}
+
 % A single neural network neuron
 \tikzsetnextfilename{nn-neuron}
 \begin{center}
@@ -63,7 +65,17 @@
       (nnn-n.270) edge [<-] (w2)
       (nnn-n.290) edge [<-] (wn)
     (1.6,4.5) node [] {$y$}
-      edge [<-] (nnn-n.north);
+      edge [<-] (nnn-n.north)
+    
+    (4.2,0)   node [anchor=west] {Eingaben}
+    (4.2,1.2) node [anchor=west] {Gewichte}
+    (4.2,2.95) node [anchor=west] {
+      $\begin{aligned}
+        &\text{Aktivierungsfunktion:} &y &= a(z) \\
+        &\text{Gewichtete Summe:} &z &= \mathbf{x}^T\mathbf{w}
+      \end{aligned}$
+    }
+    (4.2,4.5) node [anchor=west] {Ausgabe};
 \end{tikzpicture}
 \end{center}
 \end{document}
