@@ -9,6 +9,8 @@
 \usepackage[utf8]{inputenc}
 \usepackage[english, german]{babel}
 \usepackage{amsmath}
+\usepackage{etoolbox}
+\usepackage{xifthen}
 
 \usetikzlibrary{
   positioning,
@@ -16,7 +18,8 @@
   shapes.multipart,
   external,
   arrows.meta,
-  fit
+  fit,
+  graphs
 }
 
 \tikzset{
@@ -26,6 +29,9 @@
   },
   w/.style = {
     n, fill=green!10
+  },
+  b/.style = {
+    n, fill=yellow!20
   },
   pics/nnn/.style = {
     code = {
@@ -42,7 +48,6 @@
 
 \begin{document}
 
-% A single neural network neuron
 \tikzsetnextfilename{nn-neuron}
 \begin{center}
 \begin{tikzpicture}
@@ -78,4 +83,97 @@
     (4.2,4.5) node [anchor=west] {Ausgabe};
 \end{tikzpicture}
 \end{center}
+
+\hrule
+
+\tikzsetnextfilename{example-nn}
+\begin{center}
+\begin{tikzpicture}[
+  every node/.style={
+    minimum size=8mm
+  }
+]
+  \def\gap{2};
+
+  % Input layer
+  \foreach \i / \pos in {
+    {0/(0,0)},
+    {1/(1.5,0)},
+    {2/(3,0)}}
+  {
+    \ifthenelse{0 = \i}{
+      \node [b] (i\i) at \pos {1};
+    }{
+      \node [n] (i\i) at \pos {$x_\i$};
+    }
+  }
+
+  % Hidden 1
+  \foreach \i / \pos in {
+    {0/(0,\gap)},
+    {1/(1.5,\gap)},
+    {2/(3,\gap)},
+    {3/(4.5,\gap)},
+    {4/(6,\gap)}}
+  {
+    \ifthenelse{0 = \i}{
+      \node [b, xshift=(4 - 2) * -0.75cm] (h1\i) at \pos {1};
+    }{
+      \node [n, xshift=(4 - 2) * -0.75cm] (h1\i) at \pos {};
+    }
+  }
+
+  % Hidden 2
+  \foreach \i / \pos in {
+    {0/(0,2 * \gap)},
+    {1/(1.5,2 * \gap)},
+    {2/(3,2 * \gap)},
+    {3/(4.5,2 * \gap)}}
+  {
+    \ifthenelse{0 = \i}{
+      \node [b, xshift=(4 - 3) * -0.75cm] (h2\i) at \pos {1};
+    }{
+      \node [n, xshift=(4 - 3) * -0.75cm] (h2\i) at \pos {};
+    }
+  }
+
+  % Output Layer
+  \node [n, xshift=3 * 0.75cm] (o0) at (0, 3 * \gap) {$y_1$};
+
+  % Connect Input and Hidden 1
+  \foreach \i in {0,...,2}
+  {
+    \foreach \j in {1,...,4}
+    {
+        \draw [->] (i\i) -- (h1\j);   
+    }
+  }
+
+  % Connect Hidden 1 and Hidden 2
+  \foreach \i in {0,...,4}
+  {
+    \foreach \j in {1,...,3}
+    {
+        \draw [->] (h1\i) -- (h2\j);
+    }
+  }
+
+  % Connect Hidden 2 and Output
+  \foreach \i in {0,...,3}
+  {
+    \foreach \j in {0,...,0}
+    {
+        \draw [->] (h2\i) -- (o\j);   
+    }
+  }
+
+  % Labels
+  \path
+    (5.5,0) node [anchor=west] {Eingabeschicht}
+    (5.5,\gap) node [anchor=west] {Verdeckte Schicht 1}
+    (5.5,2 * \gap) node [anchor=west] {Verdeckte Schicht 2}
+    (5.5,3 * \gap) node [anchor=west] {Ausgabeschicht};
+\end{tikzpicture}
+\end{center}
+
 \end{document}
