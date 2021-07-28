@@ -1,5 +1,6 @@
 *.*
 !*.tex
-!figures/**.pdf
+!**/figures/**.pdf
 !.gitignore
+!.vscode
 !.vscode/**
