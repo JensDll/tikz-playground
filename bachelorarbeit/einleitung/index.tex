@@ -1,0 +1,86 @@
+\documentclass[
+  ngerman,
+  a4paper,
+  12pt
+]{article}
+
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[english, german]{babel}
+\usepackage{amsmath}
+\usepackage{etoolbox}
+\usepackage{xifthen}
+
+\usetikzlibrary{
+  positioning,
+  calc,
+  shapes.multipart,
+  external,
+  arrows.meta,
+  fit,
+  graphs,
+  quotes
+}
+
+\tikzset{
+  >=Triangle,
+  rounded corners=3mm
+}
+
+\tikzexternalize[prefix=figures/]
+
+\begin{document}
+
+\tikzsetnextfilename{general-architecture}
+\begin{center}
+\begin{tikzpicture}[
+  box/.style = {
+    rectangle, draw=black!40, line width=1pt, inner sep=3mm
+  },
+  every pin/.style = {},
+  every pin edge/.style = {
+    shorten <=4pt, shorten >=4pt
+  },
+  pin distance = 1cm
+]
+  \pgfdeclarelayer{background}
+  \pgfdeclarelayer{foreground}
+  \pgfsetlayers{background,main,foreground}
+
+  \node [] (service) {\textbf{Service}};
+  \node [
+    box,
+    below=2mm of service,
+    fill=blue!65,
+    text=white
+  ] (modell) {Modell};
+
+  \begin{pgfonlayer}{background}
+    \node [box, fill=yellow!20, fit=(service)(modell)] (service-box) {};
+  \end{pgfonlayer}
+
+  \node [
+    box,
+    left=3cm of service-box,
+    fill=green!15,
+    inner ysep=6mm,
+    pin={120:Webanwendung},
+    pin={163:Services},
+    pin={180:Monitoring},
+    pin={195:Analyse},
+    pin={220:\ldots}
+  ] (verbraucher) {Verbraucher};
+  \draw [->, dashed] ($(verbraucher.east) + (0,2mm)$)
+    -- node [above] {\footnotesize Eingaben} ($(service-box.west) + (0,2mm)$);
+  \draw [<-, dashed] ($(verbraucher.east) - (0,2mm)$)
+    -- node [below] (a) {\footnotesize Ausgaben} ($(service-box.west) - (0,2mm)$);
+
+  \coordinate [below=1.1cm of a] (p1);
+
+  \draw [->] (verbraucher) |- (p1) node [above] {\footnotesize Modell laden}
+    -| (service-box);
+\end{tikzpicture}
+\end{center}
+  
+\end{document}
