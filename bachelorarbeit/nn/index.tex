@@ -36,7 +36,7 @@
   pics/nnn/.style = {
     code = {
       \node [circle split, draw=black!30, line width=1pt, fill=blue!10] (-n) {
-        $a$
+        $g$
         \nodepart{lower}
         $\sum$
       };
@@ -69,18 +69,18 @@
       (nnn-n.250) edge [<-] (w1)
       (nnn-n.270) edge [<-] (w2)
       (nnn-n.290) edge [<-] (wn)
-    (1.6,4.5) node [] {$y$}
+    (1.6,4.5) node [] {$a$}
       edge [<-] (nnn-n.north)
     
     (4.2,0)   node [anchor=west] {Eingaben}
     (4.2,1.2) node [anchor=west] {Gewichte}
     (4.2,2.95) node [anchor=west] {
       $\begin{aligned}
-        &\text{Aktivierungsfunktion:} &y &= a(z) \\
+        &\text{Aktivierungsfunktion:} &a &= g(z) \\
         &\text{Gewichtete Summe:} &z &= \mathbf{x}^T\mathbf{w}
       \end{aligned}$
     }
-    (4.2,4.5) node [anchor=west] {Ausgabe};
+    (4.2,4.5) node [anchor=west] {Ausgabe\,/\,Aktivierung};
 \end{tikzpicture}
 \end{center}
 
