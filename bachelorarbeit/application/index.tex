@@ -1,0 +1,74 @@
+\documentclass[
+  ngerman,
+  a4paper,
+  12pt
+]{article}
+
+\usepackage{tikz}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[english, german]{babel}
+\usepackage{amsmath}
+\usepackage{etoolbox}
+\usepackage{xifthen}
+
+\usetikzlibrary{
+  positioning,
+  calc,
+  shapes.geometric,
+  external,
+  arrows.meta,
+  fit,
+  graphs,
+  quotes,
+  backgrounds
+}
+
+\tikzset{
+  >=Triangle
+}
+
+% \tikzexternalize[prefix=figures/]
+
+\begin{document}
+
+\tikzsetnextfilename{app-architecture}
+\begin{center}
+\begin{tikzpicture}[
+  every node/.style={draw, inner sep=3mm},
+  box/.style={rounded corners=2mm},
+  shorten > = 1mm,
+  shorten < = 1mm,
+]
+  \node [box, fill=white] (coral-app) {Coral App};
+  \node [
+    below=2mm of coral-app,
+    box,
+    fill=blue!65,
+    text=white
+  ] (modell) {Modell};
+  \begin{scope}[on background layer]
+    \node [fill=yellow!20, fit=(coral-app)(modell), box] (coral-box) {};
+  \end{scope}
+
+  \node [above= of coral-box, box] (node-video) {Node Video API};
+  \node [left= of node-video, box] (node-api) {Node API};
+  \node [right= of node-video, box] (model-api) {Modell API};
+  \node[below=3cm of model-api, cylinder, align=center,
+    shape border rotate=90, aspect=0.25] (db) {Modell\\Datenbank}
+    (db.north) edge [<->, out=90, in=270] ($(model-api.south) + (4mm,0)$);
+  \node [above= of node-video, box] (proxy) {Proxy}
+    (proxy.west)  edge [<->, out=180, in=90] (node-api.north)
+    (proxy.south) edge [<-] (node-video)
+    (proxy.east)  edge [<->, out=0, in=90] (model-api.north);
+  \node [above= of proxy, box] (ui) {Benutzerobefläche}
+    edge [<->] (proxy);
+
+  \path
+    (coral-box.west) edge [<->, out=180, in=270] (node-api.south)
+    (coral-box.north) edge [->] (node-video)
+    (coral-box.east) edge [<->, out=0, in=270] (model-api);
+\end{tikzpicture}
+\end{center}
+  
+\end{document}

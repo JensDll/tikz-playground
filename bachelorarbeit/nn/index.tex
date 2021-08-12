@@ -4,8 +4,8 @@
   12pt
 ]{article}
 
+\usepackage[dvipsnames]{xcolor}
 \usepackage{tikz}
-\usepackage{xcolor}
 \usepackage[utf8]{inputenc}
 \usepackage[english, german]{babel}
 \usepackage{amsmath}
@@ -35,7 +35,7 @@
   },
   pics/nnn/.style = {
     code = {
-      \node [circle split, draw=black!30, line width=1pt, fill=blue!10] (-n) {
+      \node [circle split, draw=black!30, line width=1pt, fill=ProcessBlue!10] (-n) {
         $g$
         \nodepart{lower}
         $\sum$
@@ -52,35 +52,37 @@
 \begin{center}
 \begin{tikzpicture}
   \path
-    (0,0) node [] (x1) {$x_1$}
-    (1.2,0) node [] (x2) {$x_2$}
-    (2.2,0) node [] {\ldots}
-    (3.2,0) node [] (xn) {$x_n$}
+    (1.1,0) node [] (x1) {$x_1$}
+    (2.2,0) node [] (x2) {$x_2$}
+    (3.2,0) node [] {$\dotsb$}
+    (4.2,0) node [] (xn) {$x_n$}
 
-    (0,1.2) node [w] (w1) {$w_1$}
+    (0,1.2) node [b] (b) {1}
+    (1.1,1.2) node [w] (w1) {$w_1$}
       edge [<-] (x1)
-    (1.2,1.2) node [w] (w2) {$w_2$}
+    (2.2,1.2) node [w] (w2) {$w_2$}
       edge [<-] (x2)
-    (2.2,1.2) node [] {\ldots}
-    (3.2,1.2) node [w] (wn) {$w_n$}
+    (3.2,1.2) node [] {$\dotsb$}
+    (4.2,1.2) node [w] (wn) {$w_n$}
       edge [<-] (xn)
 
     (1.6,3) pic [] (nnn) {nnn}
-      (nnn-n.250) edge [<-] (w1)
-      (nnn-n.270) edge [<-] (w2)
-      (nnn-n.290) edge [<-] (wn)
+      (nnn-n.255) edge [<-] (b)
+      (nnn-n.265) edge [<-] (w1)
+      (nnn-n.275) edge [<-] (w2)
+      (nnn-n.285) edge [<-] (wn)
     (1.6,4.5) node [] {$a$}
       edge [<-] (nnn-n.north)
     
-    (4.2,0)   node [anchor=west] {Eingaben}
-    (4.2,1.2) node [anchor=west] {Gewichte}
-    (4.2,2.95) node [anchor=west] {
+    (5,0)   node [anchor=mid west] {Eingaben}
+    (5,1.2) node [anchor=mid west] {Gewichte und Bias-Wert}
+    (5,2.95) node [anchor=mid west] {
       $\begin{aligned}
         &\text{Aktivierungsfunktion:} &a &= g(z) \\
-        &\text{Gewichtete Summe:} &z &= \mathbf{x}^T\mathbf{w}
+        &\text{Gewichtete Summe:} &z &= \mathbf{x}^T\mathbf{w} + b
       \end{aligned}$
     }
-    (4.2,4.5) node [anchor=west] {Ausgabe\,/\,Aktivierung};
+    (5,4.5) node [anchor=mid west] {Ausgabe\,/\,Aktivierung};
 \end{tikzpicture}
 \end{center}
 
