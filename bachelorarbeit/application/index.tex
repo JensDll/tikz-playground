@@ -28,15 +28,15 @@
   >=Triangle
 }
 
-% \tikzexternalize[prefix=figures/]
+\tikzexternalize[prefix=figures/]
 
 \begin{document}
 
 \tikzsetnextfilename{app-architecture}
 \begin{center}
 \begin{tikzpicture}[
-  every node/.style={draw, inner sep=3mm},
-  box/.style={rounded corners=2mm},
+  every node/.style={align=center},
+  box/.style={rounded corners=2mm, draw, inner sep=3mm},
   shorten > = 1mm,
   shorten < = 1mm,
 ]
@@ -46,28 +46,34 @@
     box,
     fill=blue!65,
     text=white
-  ] (modell) {Modell};
+  ] (modell) {\textbf{Modell}};
   \begin{scope}[on background layer]
-    \node [fill=yellow!20, fit=(coral-app)(modell), box] (coral-box) {};
+    \node [fill=yellow!20, fit=(coral-app)(modell), box,
+    pin={[font=\footnotesize, pin edge=dashed]270:Edge TPU}] (coral-box) {};
   \end{scope}
 
   \node [above= of coral-box, box] (node-video) {Node Video API};
   \node [left= of node-video, box] (node-api) {Node API};
   \node [right= of node-video, box] (model-api) {Modell API};
-  \node[below=3cm of model-api, cylinder, align=center,
+  \node[below=3cm of model-api, cylinder, align=center, draw, inner sep=3mm,
     shape border rotate=90, aspect=0.25] (db) {Modell\\Datenbank}
-    (db.north) edge [<->, out=90, in=270] ($(model-api.south) + (4mm,0)$);
+    (db.north) edge [<->, out=90, in=270]
+      node [font=\scriptsize, pos=0.5, right] {Modell\\Speichern} ($(model-api.south) + (4mm,0)$);
   \node [above= of node-video, box] (proxy) {Proxy}
     (proxy.west)  edge [<->, out=180, in=90] (node-api.north)
     (proxy.south) edge [<-] (node-video)
     (proxy.east)  edge [<->, out=0, in=90] (model-api.north);
-  \node [above= of proxy, box] (ui) {Benutzerobefläche}
+  \node [above= of proxy, box, fill=green!15] (ui) {Benutzerobefläche}
     edge [<->] (proxy);
+  \node [above=1mm of ui] {Verbraucher};
 
   \path
-    (coral-box.west) edge [<->, out=180, in=270] (node-api.south)
-    (coral-box.north) edge [->] (node-video)
-    (coral-box.east) edge [<->, out=0, in=270] (model-api);
+    (coral-box.west) edge [<->, out=180, in=270]
+      node [font=\scriptsize, pos=0.6, above right] {Allgemeine\\Anfragen} (node-api.south)
+    (coral-box.north) edge [->]
+      node [font=\scriptsize, pos=0.5, right] {Video Stream} (node-video) 
+    (coral-box.east) edge [<->, out=0, in=270]
+      node [font=\scriptsize, pos=0.5, above left] {Modell\\Laden} (model-api);
 \end{tikzpicture}
 \end{center}
   
