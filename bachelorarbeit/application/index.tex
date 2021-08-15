@@ -38,7 +38,7 @@
   every node/.style={align=center},
   box/.style={rounded corners=2mm, draw, inner sep=3mm},
   shorten > = 1mm,
-  shorten < = 1mm,
+  shorten < = 1mm
 ]
   \node [box, fill=white] (coral-app) {Coral App};
   \node [
@@ -52,28 +52,34 @@
     pin={[font=\footnotesize, pin edge=dashed]270:Edge TPU}] (coral-box) {};
   \end{scope}
 
-  \node [above= of coral-box, box] (node-video) {Node Video API};
-  \node [left= of node-video, box] (node-api) {Node API};
-  \node [right= of node-video, box] (model-api) {Modell API};
-  \node[below=3cm of model-api, cylinder, align=center, draw, inner sep=3mm,
-    shape border rotate=90, aspect=0.25] (db) {Modell\\Datenbank}
-    (db.north) edge [<->, out=90, in=270]
-      node [font=\scriptsize, pos=0.5, right] {Modell\\Speichern} ($(model-api.south) + (4mm,0)$);
-  \node [above= of node-video, box] (proxy) {Proxy}
-    (proxy.west)  edge [<->, out=180, in=90] (node-api.north)
-    (proxy.south) edge [<-] (node-video)
-    (proxy.east)  edge [<->, out=0, in=90] (model-api.north);
-  \node [above= of proxy, box, fill=green!15] (ui) {Benutzerobefläche}
-    edge [<->] (proxy);
-  \node [above=1mm of ui] {Verbraucher};
-
-  \path
+  \node [above=20mm of coral-box, box] (proxy) {Proxy};
+  \node [above left  = 8mm and 10mm of proxy, box, fill=green!15,
+        label={[label distance=1mm]90:Verbraucher}] (ui) {Benutzerobefläche};
+  \node [above right = 8mm and 10mm of proxy, box] (model-api) {Modell API};
+  \node [below right = 8mm and 15mm of proxy, box] (node-video) {Node Video API};
+  \node [below left  = 8mm and 15mm of proxy, box] (node-api) {Node API};
+  \node [above= of model-api, cylinder, align=center, draw, inner sep=3mm,
+    shape border rotate=90, aspect=0.25, font=\scriptsize] (db) {Modell\\Datenbank}
+      edge [<->] (model-api);
+  
+  \path [font=\scriptsize]
+    ($(proxy.west) + (0,2mm)$) edge [<->, out=180, in=270] (ui.south)
+    ($(proxy.west) - (0,2mm)$) edge [<->, out=180, in=90] (node-api.north)
+    ($(proxy.east) + (0,2mm)$) edge [<->, out=0, in=270]
+      node [pos=0.8, below right] {Speichern}
+      node [pos=0.7, above left] {Laden} (model-api.south)
+    ($(proxy.east) - (0,2mm)$) edge [<-, out=0, in=90] (node-video.north);
+  
+  \path [font=\scriptsize]
     (coral-box.west) edge [<->, out=180, in=270]
-      node [font=\scriptsize, pos=0.6, above right] {Allgemeine\\Anfragen} (node-api.south)
-    (coral-box.north) edge [->]
-      node [font=\scriptsize, pos=0.5, right] {Video Stream} (node-video) 
-    (coral-box.east) edge [<->, out=0, in=270]
-      node [font=\scriptsize, pos=0.5, above left] {Modell\\Laden} (model-api);
+        node [pos=0.6, below left] {Allgemeine\\Anfragen}
+      (node-api.south)
+    (coral-box.east) edge [->, out=0, in=270]
+        node [pos=0.6, below right] {Video\\Stream}
+      (node-video)
+    (coral-box.north) edge [<->]
+        node [right] {Modell\\Laden}
+      (proxy.south);
 \end{tikzpicture}
 \end{center}
   
