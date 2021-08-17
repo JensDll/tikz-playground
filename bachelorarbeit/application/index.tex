@@ -4,13 +4,12 @@
   12pt
 ]{article}
 
-\usepackage{tikz}
-\usepackage{xcolor}
 \usepackage[utf8]{inputenc}
+\usepackage[left=2.5cm, right=2.5cm]{geometry}
 \usepackage[english, german]{babel}
 \usepackage{amsmath}
-\usepackage{etoolbox}
-\usepackage{xifthen}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
 
 \usetikzlibrary{
   positioning,
@@ -25,30 +24,83 @@
 }
 
 \tikzset{
-  >=Triangle
+  >=Triangle,
+  box/.style={rounded corners=2mm, draw, inner sep=3mm},
+  every node/.style={align=center},
+  shorten >=1mm,
+  shorten <=1mm,  
 }
 
 \tikzexternalize[prefix=figures/]
 
 \begin{document}
+% ------------------ General Architecture ------------------
+\tikzsetnextfilename{general-architecture}
 
-\tikzsetnextfilename{app-architecture}
 \begin{center}
 \begin{tikzpicture}[
-  every node/.style={align=center},
-  box/.style={rounded corners=2mm, draw, inner sep=3mm},
-  shorten > = 1mm,
-  shorten < = 1mm
+  rounded corners=2mm,
+  every pin/.style = {},
+  every pin edge/.style = {
+    shorten <=1.5mm, shorten >=1.5mm
+  },
+  pin distance = 1cm
+]
+  \pgfdeclarelayer{background}
+  \pgfdeclarelayer{foreground}
+  \pgfsetlayers{background,main,foreground}
+
+  \node [box, fill=white] (service) {Service};
+  \node [
+    box,
+    below=2mm of service,
+    fill=blue!65,
+    text=white
+  ] (modell) {Modell};
+
+  \begin{pgfonlayer}{background}
+    \node [box, fill=Goldenrod!25, fit=(service)(modell)] (service-box) {};
+  \end{pgfonlayer}
+
+  \node [
+    box,
+    left=3cm of service-box,
+    fill=green!15,
+    inner ysep=6mm,
+    pin={120:Webanwendung},
+    pin={163:Services},
+    pin={180:Monitoring},
+    pin={195:Analyse},
+    pin={220:\ldots}
+  ] (verbraucher) {Verbraucher};
+  \draw [->, dashed] ($(verbraucher.east) + (0,2mm)$)
+    -- node [above] {\footnotesize Eingaben} ($(service-box.west) + (0,2mm)$);
+  \draw [<-, dashed] ($(verbraucher.east) - (0,2mm)$)
+    -- node [below] (a) {\footnotesize Ausgaben} ($(service-box.west) - (0,2mm)$);
+
+  \coordinate [below=1.1cm of a] (p1);
+
+  \draw [->] (verbraucher) |- (p1) node [above] {\footnotesize Modell laden}
+    -| (service-box);
+\end{tikzpicture}
+\end{center}
+
+% ------------------ App Architecture ------------------
+\tikzsetnextfilename{app-architecture}
+
+\begin{center}
+\begin{tikzpicture}[
+  every pin edge/.style = {}
 ]
   \node [box, fill=white] (coral-app) {Coral App};
   \node [
     below=2mm of coral-app,
     box,
-    fill=blue!65,
+    fill=blue!70,
     text=white
-  ] (modell) {\textbf{Modell}};
+  ] (modell) {Modell};
   \begin{scope}[on background layer]
-    \node [fill=yellow!20, fit=(coral-app)(modell), box,
+    \node [fill=Goldenrod!25, fit=(coral-app)(modell), box,
     pin={[font=\footnotesize, pin edge=dashed]270:Edge TPU}] (coral-box) {};
   \end{scope}
 
@@ -82,5 +134,31 @@
       (proxy.south);
 \end{tikzpicture}
 \end{center}
-  
+
+% ------------------ High Level Container Image Relation ------------------
+\tikzsetnextfilename{container-image-relation}
+
+\begin{center}
+\begin{tikzpicture}[
+  pics/image/.style = {
+    code = {
+      \foreach \shift in {0,5,...,20}
+        \node [draw=blue!65, fill=blue!5, fill opacity=0.90,
+        trapezium, minimum width=3cm, minimum height=6mm, yshift=\shift,
+        trapezium angle=70, trapezium stretches] (l-\shift) {};
+      \node [inner sep=0,
+      fit=(l-0.bottom left corner)
+      (l-20.bottom right corner)
+      (l-20.top right corner)] (-img) {};
+    }
+  }
+]
+\pic [] (a) {image};
+\node [below=1mm of a-img, align=center] {Image\\(Erstellungszeit)};
+\node [right=4cm of a-img, draw=Green, fill=green!8,
+minimum width=2cm, minimum height=1cm, rectangle] (container) {}
+  edge [<-, shorten >=5mm, shorten <=5mm] (a-img);
+\node [below=1mm of container, align=center] {Container\\(Laufzeit)};
+\end{tikzpicture}
+\end{center}
 \end{document}
